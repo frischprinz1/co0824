@@ -1,0 +1,20 @@
+:root {
+    --cobalt-blue: #304ddb;
+    --color-text-dark: #314351;
+    --page-title-text-dark: #1d2b36;
+    --light-gray-100: #c5ced6b2;
+    --light-gray-200: #b7c2cc;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+}
+body {
+    margin: 0;
+    background-color: #f1f3f5;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
