@@ -12,6 +12,10 @@ import ToolNameDisplay from "./FormToolNameDisplay";
 import RateDisplay from "./FormDailyRateDisplay";
 import CoverImage from "./CoverImage";
 import SuccessAlert from "./SuccessAlert";
+import Alert from "./Alert";
+import makePostRequest from "../makePostRequest";
+
+const API_URL = "http://localhost:8080/customer/tools";
 
 const RentalFormDialog = ({ children }) => {
     const [open, setOpen] = useState(true);
@@ -20,6 +24,8 @@ const RentalFormDialog = ({ children }) => {
     const [checkoutDate, setCheckoutDate] = useState("");
     const [status, setStatus] = useState(false);
     const [apiResponse, setApiResponse] = useState({});
+    const [description, setDescription] = useState("");
+    const [nextUrl, setNextUrl] = useState("");
 
     const title = "Rent Tool";
     const navigate = useNavigate();
@@ -85,29 +91,16 @@ const RentalFormDialog = ({ children }) => {
 
         // make api request with form data
         try {
-            const res =
-                validateInput() &&
-                (await fetch("http://localhost:8080/customer/tools", {
-                    method: "POST",
-                    // headers: {
-                    //     "Content-Type": "application/json",
-                    // },
-                    // body: JSON.stringify({
-                    //     toolCode,
-                    //     rentalDays,
-                    //     discountPercent,
-                    //     checkoutDate: isoCheckoutDate,
-                    // }),
-                    body: createFormData(),
-                }));
-            res.ok && console.log("Success rented tool", res.status);
-            setStatus(res.ok);
-            setApiResponse(await res.json());
+            if (validateInput()) {
+                const result = await makePostRequest(API_URL, createFormData);
+                setStatus(true);
+                setApiResponse(await result.json());
+                setDescription("View Rental Agreement");
+                setNextUrl("/tools/view-rental");
+            }
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
-
-        // curl -X POST http://localhost:8080/customer/tools -d rentalDays=9 -d toolCode="JAKR" -d discountPercent=0 -d checkoutDate=7/2/15
     };
 
     return (
@@ -160,6 +153,7 @@ const RentalFormDialog = ({ children }) => {
                                 </div>
                                 <input
                                     id="checkout-date"
+                                    title="Checkout Date Input"
                                     type="date"
                                     value={checkoutDate}
                                     onChange={(e) =>
@@ -172,12 +166,13 @@ const RentalFormDialog = ({ children }) => {
                             <div className="row">
                                 <div className="heading">
                                     <label htmlFor="rental-days">
-                                        Rental Days{" "}
+                                        Rental Days
                                         <span className="hint">(min: 1)</span>
                                     </label>
                                 </div>
                                 <input
                                     id="rental-days"
+                                    title="Rental Days Input"
                                     type="number"
                                     value={rentalDays}
                                     onChange={(e) =>
@@ -191,7 +186,7 @@ const RentalFormDialog = ({ children }) => {
                             <div className="row">
                                 <div className="heading">
                                     <label htmlFor="discountPercent">
-                                        Discount %{" "}
+                                        Discount %
                                         <span className="hint">
                                             (range: 0 - 100)
                                         </span>
@@ -199,6 +194,7 @@ const RentalFormDialog = ({ children }) => {
                                 </div>
                                 <input
                                     id="discountPercent"
+                                    title="Discount Percent Input"
                                     type="number"
                                     value={discountPercent}
                                     onChange={(e) =>
@@ -215,12 +211,18 @@ const RentalFormDialog = ({ children }) => {
                     <ToolDetail.Actions onSubmit={handleSubmit} />
                     {status && (
                         <SuccessAlert
-                            url={"/tools/view-rental"}
+                            url={nextUrl}
                             data={apiResponse}
-                            description={"View Rental Agreement"}
+                            description={description}
                             actionText="OK"
                         />
                     )}
+                    {/* <Alert
+                        url={nextUrl}
+                        data={apiResponse}
+                        description={description}
+                        actionText="OK"
+                    /> */}
                 </DialogContent>
             </Dialog.Portal>
         </Dialog.Root>

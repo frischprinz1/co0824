@@ -2,7 +2,6 @@ package com.toolrental.toolrentalproject.tooltype;
 
 import com.toolrental.toolrentalproject.rate.Rate;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -17,7 +16,7 @@ public class ToolType {
 
     private String prefix;
     private String name;
-    
+
     @OneToOne
     private Rate rate;
 

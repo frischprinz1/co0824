@@ -10,12 +10,10 @@ import {
 import ErrorBoundary from "./components/ErrorBoundary";
 import PageLayout from "./components/PageLayout.jsx";
 import Home from "./pages/Home.jsx";
-import AddTool from "./pages/AddTool.jsx";
 import Admin from "./pages/Admin.jsx";
 import RentalFormDialog from "./components/RentalFormDialog.jsx";
 import RentalAgreement from "./pages/RentalAgreement.jsx";
 
-// const API_URL = "http://localhost:5000/v1/api/tools";
 const API_URL = "http://localhost:8080";
 
 const router = createBrowserRouter([
@@ -54,10 +52,6 @@ const router = createBrowserRouter([
                         element: <RentalFormDialog />,
                     },
                 ],
-            },
-            {
-                path: "tools/add",
-                element: <AddTool />,
             },
 
             {

@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import styled, { keyframes } from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Alert = ({ props }) => {
@@ -25,7 +26,7 @@ const Alert = ({ props }) => {
             </AlertDialogTrigger>
             <AlertDialog.Portal>
                 <AlertDialogOverlay />
-                {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+                <AlertDialogTitle>{title}</AlertDialogTitle>
                 <AlertDialogContent aria-describedby={undefined}>
                     <AlertDialogDescription>
                         {description}

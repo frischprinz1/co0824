@@ -2,6 +2,19 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 
+const PageHeader = ({ buttonText, pageTitle }) => {
+    return (
+        <StyledPageHeader>
+            <div className="title">{pageTitle}</div>
+            {buttonText && (
+                <Link to="admin">
+                    <Button>{buttonText}</Button>
+                </Link>
+            )}
+        </StyledPageHeader>
+    );
+};
+
 const StyledPageHeader = styled.section`
     width: var(--page-width-sm);
     display: flex;
@@ -21,18 +34,4 @@ const StyledPageHeader = styled.section`
         color: var(--page-title-text-dark);
     }
 `;
-
-const PageHeader = ({ buttonText, pageTitle }) => {
-    return (
-        <StyledPageHeader>
-            <div className="title">{pageTitle}</div>
-            {buttonText && (
-                <Link to="admin">
-                    <Button>{buttonText}</Button>
-                </Link>
-            )}
-        </StyledPageHeader>
-    );
-};
-
 export default PageHeader;

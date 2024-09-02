@@ -9,7 +9,6 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import RentalFormDialog from "../components/RentalFormDialog.jsx";
 import RentalAgreement from "../pages/RentalAgreement.jsx";
 
-const routeLoaderResponseEmpty = [];
 const routeLoaderResponseFull = [
     {
         id: 1,
@@ -113,89 +112,95 @@ const routes = [
         ],
     },
 ];
-describe("Home", () => {
-    test("renders no tools if api response is empty", async () => {
-        routes[0].loader = () => routeLoaderResponseEmpty;
+describe("RentalFormDialog", () => {
+    test("renders the rental form dialog", async () => {
+        routes[0].loader = () => routeLoaderResponseFull;
         const router = createMemoryRouter(routes, {
-            initialEntries: ["/"],
+            initialEntries: ["/tools/JAKD"],
             initialIndex: 1,
         });
 
-        let globalHeaderElement, noToolsAvailable;
+        let dialog;
         render(<RouterProvider router={router} />);
         await waitFor(() => {
-            globalHeaderElement = screen.getByRole("banner");
-            noToolsAvailable = screen.getByText(/No tools found!/);
+            dialog = screen.getByRole("dialog");
         });
 
-        expect(globalHeaderElement).toBeInTheDocument();
-        expect(noToolsAvailable).toBeInTheDocument();
+        expect(dialog).toBeInTheDocument();
     });
 
-    test("renders tools from api response", async () => {
+    test("submit form if validation passes", async () => {
         routes[0].loader = () => routeLoaderResponseFull;
-
         const router = createMemoryRouter(routes, {
-            initialEntries: ["/"],
+            initialEntries: ["/tools/JAKD"],
             initialIndex: 1,
         });
 
-        let globalHeaderElement, noToolsAvailable;
+        let dateInput, rentalDaysInput, discountInput, checkoutButton;
 
         render(<RouterProvider router={router} />);
+        const checkoutDate = "2015-07-02";
+        const rentalDays = 19;
+        const discountPercent = 25;
 
         await waitFor(() => {
-            globalHeaderElement = screen.getByRole("banner");
-            noToolsAvailable = screen.queryByText(/No tools found!/);
+            dateInput = screen.getByTitle("Checkout Date Input");
+            rentalDaysInput = screen.getByTitle("Rental Days Input");
+            discountInput = screen.getByTitle("Discount Percent Input");
+            checkoutButton = screen.getByRole("button", { name: "Checkout" });
+
+            fireEvent.change(dateInput, { target: { value: checkoutDate } });
+            fireEvent.change(rentalDaysInput, {
+                target: { value: rentalDays },
+            });
+            fireEvent.change(discountInput, {
+                target: { value: discountPercent },
+            });
+            fireEvent.click(checkoutButton);
         });
 
-        expect(globalHeaderElement).toBeInTheDocument();
-        expect(noToolsAvailable).toBeNull();
+        expect(dateInput).toBeInTheDocument();
+        expect(rentalDaysInput).toBeInTheDocument();
+        expect(discountInput).toBeInTheDocument();
+
+        expect(rentalDaysInput.classList.contains("invalid")).toBeFalsy();
     });
-
-    test("renders correct number of tools from api response", async () => {
+    test("does not submit form if rental days validation fails", async () => {
         routes[0].loader = () => routeLoaderResponseFull;
-
         const router = createMemoryRouter(routes, {
-            initialEntries: ["/"],
+            initialEntries: ["/tools/JAKD"],
             initialIndex: 1,
         });
 
-        let jackhammerCount, ladder, chainsaw, tools;
+        let dialog, dateInput, rentalDaysInput, discountInput, checkoutButton;
 
         render(<RouterProvider router={router} />);
+        const checkoutDate = "2015-07-02";
+        const rentalDays = 0;
+        const discountPercent = 25;
 
         await waitFor(() => {
-            tools = screen.getAllByRole("toolname", { hidden: true });
-            jackhammerCount = screen.getAllByText("Jackhammer");
-            chainsaw = screen.getByText("Chainsaw");
-            ladder = screen.getByText("Ladder");
+            dialog = screen.getByRole("dialog");
+            dateInput = screen.getByTitle("Checkout Date Input");
+            rentalDaysInput = screen.getByTitle("Rental Days Input");
+            discountInput = screen.getByTitle("Discount Percent Input");
+            checkoutButton = screen.getByRole("button", { name: "Checkout" });
+
+            fireEvent.change(dateInput, { target: { value: checkoutDate } });
+            fireEvent.change(rentalDaysInput, {
+                target: { value: rentalDays },
+            });
+            fireEvent.change(discountInput, {
+                target: { value: discountPercent },
+            });
+            fireEvent.click(checkoutButton);
         });
 
-        expect(tools.length).toEqual(4);
-        expect(jackhammerCount.length).toEqual(2);
-        expect(chainsaw).toBeInTheDocument();
-        expect(ladder).toBeInTheDocument();
-    });
+        expect(dialog).toBeInTheDocument();
+        expect(dateInput).toBeInTheDocument();
+        expect(rentalDaysInput).toBeInTheDocument();
+        expect(discountInput).toBeInTheDocument();
 
-    test("navigates to Admin page on button click", async () => {
-        routes[0].loader = () => routeLoaderResponseFull;
-
-        const router = createMemoryRouter(routes, {
-            initialEntries: ["/"],
-            initialIndex: 1,
-        });
-
-        let button;
-
-        render(<RouterProvider router={router} />);
-
-        await waitFor(() => {
-            button = screen.getByRole("button", { name: "Add New Tool" });
-            expect(button).toBeInTheDocument();
-            fireEvent.click(button);
-        });
-
-        expect(router.state.location.pathname).toEqual("/tools/admin");
+        expect(rentalDaysInput.classList.contains("invalid")).toBeTruthy();
     });
 });

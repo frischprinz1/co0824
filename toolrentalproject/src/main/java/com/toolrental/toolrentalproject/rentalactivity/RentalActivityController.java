@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +21,6 @@ public class RentalActivityController {
     private ToolService toolService;
 
     // home page
-    // @GetMapping(path = "/v1")
     @GetMapping(path = "/")
     public String home() {
         return "Welcome to Tool Rental";

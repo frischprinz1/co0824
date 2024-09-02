@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-const PageLayout = ({ children }) => {
+const PageLayout = () => {
     return (
         <StyledPageLayout>
             <Outlet />

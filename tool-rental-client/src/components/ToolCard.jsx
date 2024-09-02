@@ -18,10 +18,30 @@ const ToolCard = ({ code }) => {
                     <ToolCard.CoverImage imageSrc={imageSrc} />
                 </div>
                 <div className="details">
-                    <p className="tool-name">{toolType.name}</p>
-                    <p className="tool-code">{toolCode}</p>
-                    <p className="tool-brand">{brand.name}</p>
-                    <p className="tool-rate">${toolType.rate.dailyCharge}</p>
+                    <p
+                        role="toolname"
+                        className="tool-name"
+                    >
+                        {toolType.name}
+                    </p>
+                    <p
+                        role="toolcode"
+                        className="tool-code"
+                    >
+                        {toolCode}
+                    </p>
+                    <p
+                        role="toolbrand"
+                        className="tool-brand"
+                    >
+                        {brand.name}
+                    </p>
+                    <p
+                        role="toolrate"
+                        className="tool-rate"
+                    >
+                        ${toolType.rate.dailyCharge}
+                    </p>
                 </div>
             </div>
         </StyledToolPlaceholder>
